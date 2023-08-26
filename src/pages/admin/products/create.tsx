@@ -31,6 +31,7 @@ export default function Home() {
     quantity: number;
   }>();
   const {
+    isSuccess: createProductIsSuccess,
     mutate: createProduct,
     isLoading: createProductIsLoading,
     error: createProductError,
@@ -109,43 +110,26 @@ export default function Home() {
             sx={{
               display: "flex",
               marginTop: 2,
-              flexDirection: "row",
+              flexDirection: "column",
               gap: 2,
             }}
           >
             {createProductError ? (
               <Alert severity="error">{(createProductError as { message: string }).message ?? "An unknown error occurred."}</Alert>
             ) : null}
-            <Button variant="contained" type="submit" disabled={createProductIsLoading}>
-              Create Product
-            </Button>
+            {createProductIsSuccess ? (
+              <Alert severity="success">
+                Product created successfully. <Link href="/admin/products">Click Here</Link> to view all products.
+              </Alert>
+            ) : null}
+            <div>
+              <Button variant="contained" type="submit" disabled={createProductIsLoading}>
+                Create Product
+              </Button>
+            </div>
           </Stack>
         </form>
       </Container>
     </main>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const products = await prisma.product.findMany({
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      quantity: true,
-      ProductRFID: {
-        select: {
-          id: true,
-          rfid: true,
-        },
-      },
-    },
-  });
-  console.log(products);
-
-  return {
-    props: {
-      products,
-    },
-  };
-};

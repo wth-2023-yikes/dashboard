@@ -21,18 +21,19 @@ model Product {
 }
 
 model QRPathImage {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    image     String
-    QRPath    QRPath[]
+    id           String      @id @default(cuid())
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @updatedAt
+    image        String
+    Checkpoint   Checkpoint? @relation(fields: [checkpointId], references: [id])
+    checkpointId String?
 }
 
-model QRPath {
-    id            String      @id @default(cuid())
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
-    path          String
-    image         QRPathImage @relation(fields: [qRPathImageId], references: [id])
-    qRPathImageId String
+model Checkpoint {
+    id          String        @id @default(cuid())
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    name        String
+    images      String[]      @default([])
+    QRPathImage QRPathImage[]
 }

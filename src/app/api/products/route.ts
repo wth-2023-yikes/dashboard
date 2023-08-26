@@ -25,8 +25,8 @@ export async function GET() {
 
 const PostRequestSchema = z.object({
   name: z.string(),
-  price: z.number(),
-  quantity: z.number(),
+  price: z.number().int(),
+  quantity: z.number().int(),
 });
 
 export async function POST(request: Request) {

@@ -43,6 +43,7 @@ model Checkpoint {
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
     name        String
+    // Json not supported.
     images      String[]      @default([])
     QRPathImage QRPathImage[]
 }

@@ -29,7 +29,7 @@ export async function GET() {
 
 const PostRequestSchema = z.object({
   name: z.string(),
-  images: z.array(ImageSchema),
+  images: z.array(ImageSchema).optional(),
 });
 
 export async function POST(request: Request) {
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       },
       data: {
         name: body.name,
-        images: body.images.map((image) => {
+        images: (body.images ?? []).map((image) => {
           return JSON.stringify(image);
         }),
       },

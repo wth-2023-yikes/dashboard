@@ -1,46 +1,50 @@
 import { NextResponse } from "next/server";
 import { ZodError, z } from "zod";
 import { prisma } from "~/server/db";
+import { ImageSchema } from "./shared";
 
 export async function GET() {
-  const res = await prisma.product.findMany({
+  const res = await prisma.checkpoint.findMany({
     select: {
       id: true,
       name: true,
-      price: true,
-      quantity: true,
-      ProductRFID: {
-        select: {
-          id: true,
-          rfid: true,
-        },
-      },
+      images: true,
     },
   });
 
-  return NextResponse.json(res, {
-    status: 200,
-  });
+  return NextResponse.json(
+    res.map((checkpoint) => {
+      return {
+        ...checkpoint,
+        images: checkpoint.images.map((image) => {
+          return ImageSchema.parse(JSON.parse(image));
+        }),
+      };
+    }),
+    {
+      status: 200,
+    }
+  );
 }
 
 const PostRequestSchema = z.object({
   name: z.string(),
-  price: z.number().int(),
-  quantity: z.number().int(),
+  images: z.array(ImageSchema),
 });
 
 export async function POST(request: Request) {
   try {
     const body = PostRequestSchema.parse(await request.json());
 
-    const res = await prisma.product.create({
+    const res = await prisma.checkpoint.create({
       select: {
         id: true,
       },
       data: {
         name: body.name,
-        price: body.price,
-        quantity: body.quantity,
+        images: body.images.map((image) => {
+          return JSON.stringify(image);
+        }),
       },
     });
 

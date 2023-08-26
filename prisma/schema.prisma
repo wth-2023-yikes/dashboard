@@ -11,13 +11,22 @@ datasource db {
 }
 
 model Product {
+    id          String        @id @default(cuid())
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    name        String
+    price       Int
+    quantity    Int
+    ProductRFID ProductRFID[]
+}
+
+model ProductRFID {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    name      String
-    price     Int
-    quantity  Int
-    rfidRef   String?
+    rfid      String   @unique
+    productId String
+    product   Product? @relation(fields: [productId], references: [id])
 }
 
 model QRPathImage {

@@ -29,21 +29,24 @@ model ProductRFID {
     product   Product? @relation(fields: [productId], references: [id])
 }
 
-model QRPathImage {
-    id           String      @id @default(cuid())
-    createdAt    DateTime    @default(now())
-    updatedAt    DateTime    @updatedAt
-    image        String
-    Checkpoint   Checkpoint? @relation(fields: [checkpointId], references: [id])
-    checkpointId String?
+model Checkpoint {
+    id               String           @id @default(cuid())
+    createdAt        DateTime         @default(now())
+    updatedAt        DateTime         @updatedAt
+    name             String
+    images           String[]         @default([])
+    CheckpointPath   CheckpointPath[] @relation("from_checkpoint")
+    ToCheckpointPath CheckpointPath[] @relation("to_checkpoint")
 }
 
-model Checkpoint {
-    id          String        @id @default(cuid())
-    createdAt   DateTime      @default(now())
-    updatedAt   DateTime      @updatedAt
-    name        String
-    // Json not supported.
-    images      String[]      @default([])
-    QRPathImage QRPathImage[]
+model CheckpointPath {
+    id             String     @id @default(cuid())
+    createdAt      DateTime   @default(now())
+    updatedAt      DateTime   @updatedAt
+    toCheckpointId String
+    ToCheckpoint   Checkpoint @relation(name: "to_checkpoint", fields: [toCheckpointId], references: [id])
+    checkpointId   String
+    Checkpoint     Checkpoint @relation(name: "from_checkpoint", fields: [checkpointId], references: [id])
+    images         String[]
+    tags           String[]
 }

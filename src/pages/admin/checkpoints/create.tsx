@@ -27,16 +27,14 @@ export default function Home() {
     formState: { errors },
   } = useForm<{
     name: string;
-    price: number;
-    quantity: number;
   }>();
   const {
-    isSuccess: createProductIsSuccess,
-    mutate: createProduct,
-    isLoading: createProductIsLoading,
-    error: createProductError,
-  } = useMutation(async (data: { name: string; price: number; quantity: number }) => {
-    const response = await fetch("/api/products/", {
+    mutate: createCheckpoint,
+    isSuccess: createCheckpointIsSuccess,
+    isLoading: createCheckpointIsLoading,
+    error: createCheckpointError,
+  } = useMutation(async (data: { name: string }) => {
+    const response = await fetch("/api/checkpoints/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,12 +63,12 @@ export default function Home() {
             fontWeight: 700,
           }}
         >
-          Create Product
+          Create Checkpoint
         </Typography>
         <form
           // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/require-await
           onSubmit={handleSubmit(async (data) => {
-            void createProduct(data);
+            void createCheckpoint(data);
           })}
         >
           <TextField
@@ -81,31 +79,7 @@ export default function Home() {
             variant="outlined"
             {...register("name", { required: true })}
           />
-          <Stack
-            sx={{
-              display: "flex",
-              marginTop: 2,
-              flexDirection: "row",
-              gap: 2,
-            }}
-          >
-            <TextField
-              sx={{
-                width: "100%",
-              }}
-              label="Price"
-              variant="outlined"
-              {...register("price", { required: true, valueAsNumber: true, min: 0 })}
-            />
-            <TextField
-              sx={{
-                width: "100%",
-              }}
-              label="Quantity"
-              variant="outlined"
-              {...register("quantity", { required: true, valueAsNumber: true, min: 0 })}
-            />
-          </Stack>
+
           <Stack
             sx={{
               display: "flex",
@@ -114,17 +88,17 @@ export default function Home() {
               gap: 2,
             }}
           >
-            {createProductError ? (
-              <Alert severity="error">{(createProductError as { message: string }).message ?? "An unknown error occurred."}</Alert>
+            {createCheckpointError ? (
+              <Alert severity="error">{(createCheckpointError as { message: string }).message ?? "An unknown error occurred."}</Alert>
             ) : null}
-            {createProductIsSuccess ? (
+            {createCheckpointIsSuccess ? (
               <Alert severity="success">
-                Product created successfully. <Link href="/admin/products">Click Here</Link> to view all products.
+                Checkpoint created successfully. <Link href="/admin/checkpoints">Click Here</Link> to view all checkpoints.
               </Alert>
             ) : null}
             <div>
-              <Button variant="contained" type="submit" disabled={createProductIsLoading}>
-                Create Product
+              <Button variant="contained" type="submit" disabled={createCheckpointIsLoading}>
+                Create Checkpoint
               </Button>
             </div>
           </Stack>

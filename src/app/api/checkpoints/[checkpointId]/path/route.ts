@@ -41,7 +41,7 @@ export async function GET(request: Request, { params }: { params: { checkpointId
   return NextResponse.json(
     res.map((path) => {
       return {
-        ...res,
+        ...path,
         images: path.images.map((image) => {
           return ImageSchema.parse(JSON.parse(image));
         }),

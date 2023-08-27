@@ -97,7 +97,6 @@ export default function Home({
         <form
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={handleSubmit(async (data) => {
-            console.log(data);
             // https://stackoverflow.com/questions/36280818/how-to-convert-file-to-base64-in-javascript
             const toBase64 = (file: Blob) =>
               new Promise((resolve, reject) => {

@@ -15,7 +15,7 @@ export async function GET(request: Request, { params }: { params: { checkpointId
       images: true,
     },
     where: {
-      id: params.checkpointId,
+      checkpointId: params.checkpointId,
     },
   });
 
